@@ -20,6 +20,7 @@ from wordcloud import WordCloud
 import barcode
 import zipfile
 from barcode.writer import ImageWriter
+import urllib.parse
 
 urlItens = "https://github.com/NiedsonEmanoel/NiedsonEmanoel/raw/main/enem/An%C3%A1lise%20de%20Itens/OrdenarPorTri/gerador/provasOrdernadasPorTri.csv"
 dItens = pd.read_csv(urlItens, encoding='utf-8', decimal=',')
@@ -62,7 +63,11 @@ class PDF(FPDF):
 
 def toYoutube(textPrompt):
     try:
-      search_query = "https://www.youtube.com/results?search_query=" + "+".join(textPrompt.split())
+      # TEST STUFF (NÃO DELETAR ATÉ TER CERTEZA QUE FUNCIONARÁ CORRETAMENTE)
+      encoded_query = urllib.parse.quote_plus(textPrompt)
+      search_query = f"https://www.youtube.com/results?search_query={encoded_query}"
+      print(f"MUITA CALMA NESSA HORA JÃO CLEBER: {search_query}")
+      # END TEST STUFF
     except:
       search_query = 'N/A'
     return(search_query)
@@ -70,13 +75,16 @@ def toYoutube(textPrompt):
 def remover_caracteres_invalidos(texto):
         numAssc = 251
         try:
-          caracteres_invalidos = [char for char in texto if ord(char) > numAssc]
-          texto_substituido = ''.join('' if ord(char) > numAssc else char for char in texto)
-          print(f"Caracteres inválidos substituídos: {caracteres_invalidos}")
-          return texto_substituido
+            caracteres_invalidos = [char for char in texto if ord(char) > numAssc]
+            texto_substituido = ''.join('' if ord(char) > numAssc else char for char in texto)
+            print(f"Caracteres inválidos substituídos: {caracteres_invalidos}")
+
+            return texto_substituido
         except:
-          print('sorry')
-          return(texto)
+            print('sorry')
+
+            return(texto)
+        
 
 def Capa(dItens):
   todos_itens = ' '.join(s for s in dItens['OCRSearch'].apply(str).values)
@@ -119,6 +127,7 @@ def generate_random_number():
 
 
 def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
+
     dfResult_CN = dfResult_CN[dfResult_CN['OCRSearch']!='N/A']
     if (prova !='LC'):
         dfResult_CN = dfResult_CN.query("IN_ITEM_ABAN == 0 and TP_LINGUA not in [0, 1]")
@@ -285,7 +294,6 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
 
     return 'H'+str(Habilidade)+'_'+str(flashname)
 
-
 modelo = genanki.Model(
     187333333,
     'enemaster',
@@ -356,6 +364,9 @@ def main():
                     print(f'O arquivo {file} foi removido com sucesso.')
 
             print(f'Arquivos foram zipados para {zip_filename} e os originais foram removidos.')
+
+
+
             with open(zip_filename, "rb") as fp:
                 st.markdown(f"<hr>",unsafe_allow_html=True)
                 st.info('Baixe seu material.', icon="ℹ️")
@@ -367,6 +378,7 @@ def main():
                     file_name=zip_filename,
                     mime='application/zip',
                 )
+
+
 if __name__ == "__main__":
     main()
-            
