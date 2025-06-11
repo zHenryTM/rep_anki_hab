@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 # Files
 anotações.txt
 
+=======
+>>>>>>> 4d8c41f4356afa3da882388a684e9fdfea15187c
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
