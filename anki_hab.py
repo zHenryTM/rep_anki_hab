@@ -7,7 +7,6 @@ import streamlit as st
 import numpy as np
 from scipy.optimize import minimize_scalar
 import genanki
-from fpdf import FPDF
 import requests
 from io import BytesIO
 import streamlit.components.v1 as components
@@ -25,49 +24,19 @@ from barcode.writer import ImageWriter
 # Minhas imports
 from business.generate_link_to_youtube import generate_link_to_youtube
 from business.remove_invalid_characters import remove_invalid_characters
+from business.PDF import PDF_Generator
 from interface.artwork import artwork
-
-
 
 
 urlItens = "https://github.com/NiedsonEmanoel/NiedsonEmanoel/raw/main/enem/An%C3%A1lise%20de%20Itens/OrdenarPorTri/gerador/provasOrdernadasPorTri.csv"
 dItens = pd.read_csv(urlItens, encoding='utf-8', decimal=',')
+
 
 def flashnamesa(SG):
     if SG == 'Natureza': return 'CN'
     elif SG == 'Matemática': return 'MT'
     elif SG == 'Humanas': return 'CH'
     else: return 'LC'
-
-#Definindo Classe do PDF de Saída
-class PDF(FPDF):
-    def header(self):
-       self.image('./images/design/lists_pages_design.png', x=0, y=0, w=self.w, h=self.h, type='png')
-
-    def add_my_link(self, x, y, txt, link):
-        self.set_xy(x, y)
-        self.set_text_color(0, 0, 0)
-        self.set_font('Times', 'BI', 12)
-        self.add_link()
-
-        # obter a largura do texto
-        w = self.get_string_width(txt) + 6  # adicione uma margem de 3 em cada lado
-
-        # desenhar o retângulo em torno do texto
-        self.set_fill_color(255, 112, 79)
-        self.cell(w, 10, '', border=0, ln=0, fill=True, align='C', link=link)
-
-        # adicionar o texto com o link
-        self.set_xy(x, y)
-        self.cell(w, 10, txt, border=0, ln=1, align='C', link=link)
-
-    # Page footer
-    def footer(self):
-      if self.page_no() != 1:
-        self.image("./images/design/enemaster_logo.png", x=90, y=283, h=10,type='png')
-        self.set_y(0)
-        self.set_font('Arial', 'BI', 8)
-        self.cell(0, 8, '     '+str(self.page_no()) + '/{nb}', 0, 0, 'C')
 
 
 
@@ -130,7 +99,7 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
 
     pacote.write_to_file('H'+str(Habilidade)+'_'+str(flashname)+'.apkg')
 
-    pdf = PDF()
+    pdf = PDF_Generator()
     pdf.alias_nb_pages()
     pdf.set_title(flashname)
 
