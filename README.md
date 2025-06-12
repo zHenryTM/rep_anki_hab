@@ -1,6 +1,8 @@
 # 📚 Enemaster
 
-![Enemaster Logo](./images/design/enemaster_logo.png)
+<p align="center">
+  <img src="./images/design/enemaster_logo.png" alt="Enemaster Logo" width="300"/>
+</p>
 
 Estude para o Enem com mais agilidade e com foco no que realmente importa: dominar as Habilidades da Matriz de Referência.
 
