@@ -1,5 +1,7 @@
 # 📚 Enemaster
 
+![Enemaster Logo](./images/design/enemaster_logo.png)
+
 Estude para o Enem com mais agilidade e com foco no que realmente importa: dominar as Habilidades da Matriz de Referência.
 
 ## 📌 Sumário
