@@ -20,10 +20,13 @@ from wordcloud import WordCloud
 import barcode
 import zipfile
 from barcode.writer import ImageWriter
-<<<<<<< HEAD
-import urllib.parse
-=======
->>>>>>> 4d8c41f4356afa3da882388a684e9fdfea15187c
+
+
+# Minhas imports
+# from interface.capa import capa
+from business.generate_link_to_youtube import generate_link_to_youtube
+
+
 
 urlItens = "https://github.com/NiedsonEmanoel/NiedsonEmanoel/raw/main/enem/An%C3%A1lise%20de%20Itens/OrdenarPorTri/gerador/provasOrdernadasPorTri.csv"
 dItens = pd.read_csv(urlItens, encoding='utf-8', decimal=',')
@@ -37,7 +40,7 @@ def flashnamesa(SG):
 #Definindo Classe do PDF de Saída
 class PDF(FPDF):
     def header(self):
-       self.image('fundo.png', x=0, y=0, w=self.w, h=self.h, type='png')
+       self.image('./images/design/lists_pages_design.png', x=0, y=0, w=self.w, h=self.h, type='png')
 
     def add_my_link(self, x, y, txt, link):
         self.set_xy(x, y)
@@ -59,30 +62,16 @@ class PDF(FPDF):
     # Page footer
     def footer(self):
       if self.page_no() != 1:
-        self.image("fundo2.png", x=90, y=283, h=10,type='png')
+        self.image("./images/design/enemaster_logo.png", x=90, y=283, h=10,type='png')
         self.set_y(0)
         self.set_font('Arial', 'BI', 8)
         self.cell(0, 8, '     '+str(self.page_no()) + '/{nb}', 0, 0, 'C')
 
-def toYoutube(textPrompt):
-    try:
-<<<<<<< HEAD
-      # TEST STUFF (NÃO DELETAR ATÉ TER CERTEZA QUE FUNCIONARÁ CORRETAMENTE)
-      encoded_query = urllib.parse.quote_plus(textPrompt)
-      search_query = f"https://www.youtube.com/results?search_query={encoded_query}"
-      print(f"MUITA CALMA NESSA HORA JÃO CLEBER: {search_query}")
-      # END TEST STUFF
-=======
-      search_query = "https://www.youtube.com/results?search_query=" + "+".join(textPrompt.split())
->>>>>>> 4d8c41f4356afa3da882388a684e9fdfea15187c
-    except:
-      search_query = 'N/A'
-    return(search_query)
+
 
 def remover_caracteres_invalidos(texto):
         numAssc = 251
         try:
-<<<<<<< HEAD
             caracteres_invalidos = [char for char in texto if ord(char) > numAssc]
             texto_substituido = ''.join('' if ord(char) > numAssc else char for char in texto)
             print(f"Caracteres inválidos substituídos: {caracteres_invalidos}")
@@ -93,17 +82,9 @@ def remover_caracteres_invalidos(texto):
 
             return(texto)
         
-=======
-          caracteres_invalidos = [char for char in texto if ord(char) > numAssc]
-          texto_substituido = ''.join('' if ord(char) > numAssc else char for char in texto)
-          print(f"Caracteres inválidos substituídos: {caracteres_invalidos}")
-          return texto_substituido
-        except:
-          print('sorry')
-          return(texto)
->>>>>>> 4d8c41f4356afa3da882388a684e9fdfea15187c
 
-def Capa(dItens):
+
+def capa(dItens):
   todos_itens = ' '.join(s for s in dItens['OCRSearch'].apply(str).values)
   todos_itens = todos_itens.replace(';',  ' ').replace('/',  ' ')
 
@@ -136,18 +117,11 @@ def Capa(dItens):
   ax.axis("off")
 
   # Salvar a figura em tamanho A4
-  plt.savefig("wordcloud_a4.png", bbox_inches='tight', pad_inches=0)
-
-def generate_random_number():
-    # Gerar um número inteiro aleatório entre 0 e 100000
-    return random.randint(0, 100000)
+  plt.savefig("./images/design/wordcloud_a4.png", bbox_inches='tight', pad_inches=0)
 
 
 def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
-<<<<<<< HEAD
 
-=======
->>>>>>> 4d8c41f4356afa3da882388a684e9fdfea15187c
     dfResult_CN = dfResult_CN[dfResult_CN['OCRSearch']!='N/A']
     if (prova !='LC'):
         dfResult_CN = dfResult_CN.query("IN_ITEM_ABAN == 0 and TP_LINGUA not in [0, 1]")
@@ -165,13 +139,13 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
     dfResult_CN = dfResult_CN[dfResult_CN['SG_AREA'] == prova]
     dfResult_CN = dfResult_CN[dfResult_CN['IN_ITEM_ABAN'] == 0]
     dfResult_CN = dfResult_CN[dfResult_CN['CO_HABILIDADE'] == Habilidade]
-    Capa(dfResult_CN)
+    capa(dfResult_CN)
     dfResult_CN.sort_values('theta_065', ascending=True, inplace=True)
     dfResult_CN['indexacao'] = dfResult_CN.reset_index().index + 1
 
     # Criar um baralho para armazenar os flashcards
     baralho = genanki.Deck(
-        generate_random_number(), # Um número aleatório que identifica o baralho
+        random.randint(0, 100000), # Um número aleatório que identifica o baralho
         str('Questões::Habilidades::'+str(flashname)+'::H'+str(Habilidade)) # O nome do baralho
     )
 
@@ -210,11 +184,11 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
     pdf.set_title(flashname)
 
     pdf.add_page()
-    pdf.image("wordcloud_a4.png", x=0, y=0, w=pdf.w, h=pdf.h, type='png')
+    pdf.image("images/design/wordcloud_a4.png", x=0, y=0, w=pdf.w, h=pdf.h, type='png')
     pdf.add_page()
 
     pdf.set_font('Times', 'B', 12)
-    img_dir = 'images/'  # Diretório local para salvar as imagens
+    img_dir = 'images/questions_images'  # Diretório local para salvar as imagens
 
     # Criar diretório se não existir
     if not os.path.exists(img_dir):
@@ -267,7 +241,7 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
                 pdf.image(img_pathax, x=3, y=-3,  h=25) #w=45,
                 pdf.ln(10)
 
-                link = toYoutube(remover_caracteres_invalidos(dfResult_CN.loc[i, "OCRSearch"]))
+                link = generate_link_to_youtube(remover_caracteres_invalidos(dfResult_CN.loc[i, "OCRSearch"]))
                 pdf.add_my_link(170, 25, "RESOLUÇÃO", link)
                 pdf.set_text_color(0, 0, 0)
                 pdf.set_font('Times', 'B', 12)
@@ -314,10 +288,6 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
 
     return 'H'+str(Habilidade)+'_'+str(flashname)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4d8c41f4356afa3da882388a684e9fdfea15187c
 modelo = genanki.Model(
     187333333,
     'enemaster',
@@ -339,6 +309,7 @@ modelo = genanki.Model(
 st.set_page_config(layout='wide', page_title='Enemaster.app', initial_sidebar_state="expanded", page_icon="🧊",    menu_items={
         'About': "# Feito por *enemaster.app*"
     })
+
 
 def main():
     idom = -1
@@ -388,12 +359,9 @@ def main():
                     print(f'O arquivo {file} foi removido com sucesso.')
 
             print(f'Arquivos foram zipados para {zip_filename} e os originais foram removidos.')
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> 4d8c41f4356afa3da882388a684e9fdfea15187c
             with open(zip_filename, "rb") as fp:
                 st.markdown(f"<hr>",unsafe_allow_html=True)
                 st.info('Baixe seu material.', icon="ℹ️")
@@ -405,13 +373,7 @@ def main():
                     file_name=zip_filename,
                     mime='application/zip',
                 )
-<<<<<<< HEAD
 
 
 if __name__ == "__main__":
     main()
-=======
-if __name__ == "__main__":
-    main()
-            
->>>>>>> 4d8c41f4356afa3da882388a684e9fdfea15187c
