@@ -24,7 +24,9 @@ from barcode.writer import ImageWriter
 
 # Minhas imports
 from business.generate_link_to_youtube import generate_link_to_youtube
+from business.remove_invalid_characters import remove_invalid_characters
 from interface.artwork import artwork
+
 
 
 
@@ -68,20 +70,6 @@ class PDF(FPDF):
         self.cell(0, 8, '     '+str(self.page_no()) + '/{nb}', 0, 0, 'C')
 
 
-
-def remover_caracteres_invalidos(texto):
-        numAssc = 251
-        try:
-            caracteres_invalidos = [char for char in texto if ord(char) > numAssc]
-            texto_substituido = ''.join('' if ord(char) > numAssc else char for char in texto)
-            print(f"Caracteres inválidos substituídos: {caracteres_invalidos}")
-
-            return texto_substituido
-        except:
-            print('sorry')
-
-            return(texto)
-        
 
 def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
 
@@ -204,7 +192,7 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
                 pdf.image(img_pathax, x=3, y=-3,  h=25) #w=45,
                 pdf.ln(10)
 
-                link = generate_link_to_youtube(remover_caracteres_invalidos(dfResult_CN.loc[i, "OCRSearch"]))
+                link = generate_link_to_youtube(remove_invalid_characters(dfResult_CN.loc[i, "OCRSearch"]))
                 pdf.add_my_link(170, 25, "RESOLUÇÃO", link)
                 pdf.set_text_color(0, 0, 0)
                 pdf.set_font('Times', 'B', 12)
