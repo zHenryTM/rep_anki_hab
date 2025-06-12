@@ -6,7 +6,6 @@ import plotly.express as px
 import streamlit as st
 import numpy as np
 from scipy.optimize import minimize_scalar
-import genanki
 import requests
 from io import BytesIO
 import streamlit.components.v1 as components
@@ -22,9 +21,10 @@ from barcode.writer import ImageWriter
 
 
 # Minhas imports
-from business.generate_link_to_youtube import generate_link_to_youtube
-from business.remove_invalid_characters import remove_invalid_characters
-from business.PDF import PDF_Generator
+from business.Functions.generate_link_to_youtube import generate_link_to_youtube
+from business.Functions.remove_invalid_characters import remove_invalid_characters
+from business.Classes.PDF_Generator import PDF_Generator
+from business.Classes.Anki_Handler import Anki_Handler
 from interface.artwork import artwork
 
 
@@ -63,11 +63,9 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
     dfResult_CN.sort_values('theta_065', ascending=True, inplace=True)
     dfResult_CN['indexacao'] = dfResult_CN.reset_index().index + 1
 
-    # Criar um baralho para armazenar os flashcards
-    baralho = genanki.Deck(
-        random.randint(0, 100000), # Um número aleatório que identifica o baralho
-        str('Questões::Habilidades::'+str(flashname)+'::H'+str(Habilidade)) # O nome do baralho
-    )
+
+    baralho = Anki_Handler.create_deck(deck_id=random.randint(0, 100000), deck_name=str('Questões::Habilidades::'+str(flashname)+'::H'+str(Habilidade)))
+
 
     # Criar uma lista para armazenar as informações dos flashcards
     flashcards = []
@@ -83,8 +81,8 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
         inic = "Q" + str(dfResult_CN.loc[i, "CO_POSICAO"]) + ':' + str(dfResult_CN.loc[i, "ANO"]) + ' - H' + str(dfResult_CN.loc[i, "CO_HABILIDADE"].astype(int)) + " - Proficiência: " + str(dfResult_CN.loc[i, "theta_065"].round(2))
 
         # Criar um flashcard com a imagem e a resposta
-        flashcard = genanki.Note(
-            model=modelo,
+        flashcard = Anki_Handler.create_flashcard(
+            model=Anki_Handler.get_flashcards_model(),
             fields=[inic, '<img src="https://niedsonemanoel.com.br/enem/An%C3%A1lise%20de%20Itens/OrdenarPorTri/1.%20Itens%20BNI_/' + imagem + '"]', resposta,  '<img src="https://niedsonemanoel.com.br/enem/An%C3%A1lise%20de%20Itens/OrdenarPorTri/1.%20Itens%20BNI_/Correcao/' + imagemQ + '"]']
         )
 
@@ -95,8 +93,7 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
         baralho.add_note(flashcard)
 
     # Criar um pacote com o baralho e as imagens
-    pacote = genanki.Package(baralho)
-
+    pacote = Anki_Handler.create_package(decks=baralho)
     pacote.write_to_file('H'+str(Habilidade)+'_'+str(flashname)+'.apkg')
 
     pdf = PDF_Generator()
@@ -208,23 +205,6 @@ def questHab(dfResult_CN, prova, Habilidade, idom, flashname):
 
     return 'H'+str(Habilidade)+'_'+str(flashname)
 
-modelo = genanki.Model(
-    187333333,
-    'enemaster',
-    fields=[
-        {'name': 'MyMedia'},
-        {'name': 'Questão'},
-        {'name': 'Resposta'},
-        {'name': 'Image'}
-    ],
-    templates=[
-        {
-            'name': 'Cartão 1',
-            'qfmt': '<b>{{Questão}}</b><hr>{{MyMedia}}',
-            'afmt': '{{FrontSide}}<br><hr><b>{{Resposta}}<hr></b></b>{{Image}}',
-        },
-    ])
-
 
 st.set_page_config(layout='wide', page_title='Enemaster.app', initial_sidebar_state="expanded", page_icon="🧊",    menu_items={
         'About': "# Feito por *enemaster.app*"
@@ -255,7 +235,7 @@ def main():
         mat = flashnamesa(mats)
         toZip = []
         if(len(habs) > 0):
-            with st.spinner("Gerando seu material..."):
+            with st.spinner("Gerando seu material (isso pode demorar um pouco)..."):
                 for i in habs:
                     if ((mat == 'LC' and i >= 5) and (mat == 'LC' and i <= 8)):
                         continue

@@ -18,12 +18,11 @@ class PDF_Generator(FPDF):
         self.set_fill_color(255, 112, 79)
         self.cell(text_width, 10, '', border=0, ln=0, fill=True, align='C', link=link)
 
-        # adicionar o texto com o link
+        # adicionar o texto com o link das resoluções das questões no YouTube.
         self.set_xy(x, y)
         self.cell(text_width, 10, txt, border=0, ln=1, align='C', link=link)
 
 
-    # Footer da página.
     def footer(self):
       if self.page_no() != 1:
         self.image("./images/design/enemaster_logo.png", x=90, y=283, h=10,type='png')
