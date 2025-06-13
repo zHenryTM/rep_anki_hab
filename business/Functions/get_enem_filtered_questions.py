@@ -1,7 +1,7 @@
 from interface.generate_pdf_artwork import generate_pdf_artwork
 
 
-def generate_enem_filtered_questions(dfResult_CN, prova, Habilidade, idom):
+def get_enem_filtered_questions(dfResult_CN, prova, Habilidade, idom):
     dfResult_CN = dfResult_CN[dfResult_CN['OCRSearch']!='N/A']
 
     if (prova !='LC'):
