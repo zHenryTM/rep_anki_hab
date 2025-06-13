@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 
 
-def artwork(dataframe_questions_infos):
+def generate_pdf_artwork(dataframe_questions_infos):
 
   all_items = ' '.join(s for s in dataframe_questions_infos['OCRSearch'].apply(str).values)
   all_items = all_items.replace(';',  ' ').replace('/',  ' ')
