@@ -36,4 +36,4 @@ def generate_pdf_artwork(dataframe_questions_infos):
   ax.imshow(wordcloud, interpolation='bilinear')  # Plotar a nuvem de palavras
   ax.axis("off")
 
-  plt.savefig("wordcloud_a4.png", bbox_inches='tight', pad_inches=0)  # Salvar a figura em tamanho A4
+  plt.savefig("./images/design/wordcloud_a4.png", bbox_inches='tight', pad_inches=0)  # Salvar a figura em tamanho A4
