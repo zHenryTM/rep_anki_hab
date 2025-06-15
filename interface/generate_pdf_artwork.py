@@ -28,6 +28,7 @@ def generate_pdf_artwork(dataframe_questions_infos):
 
   a4_width_inches = 8.27
   a4_height_inches = 11.69
+  
   dpi = 300  # Ajuste a resolução conforme necessário
 
   fig, ax = plt.subplots(figsize=(a4_width_inches, a4_height_inches), dpi=dpi)  # Criar a figura com o tamanho A4

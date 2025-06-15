@@ -4,23 +4,17 @@ import pandas as pd
 import streamlit as st
 
 
-from business.Functions.questHab import questHab
+from business.Functions.get_enem_data import get_enem_data
 from business.Functions.get_enem_subjects_acronym import get_enem_subjects_acronym
 from business.Functions.get_enem_filtered_questions import get_enem_filtered_questions
 from business.Functions.generate_list_from_filtered_questions import generate_list_from_filtered_questions
 from business.Functions.generate_anki_deck_from_filtered_questions import generate_anki_deck_from_filtered_questions
 
 
-
-#urlItens = "https://github.com/NiedsonEmanoel/NiedsonEmanoel/raw/main/enem/An%C3%A1lise%20de%20Itens/OrdenarPorTri/gerador/provasOrdernadasPorTri.csv"
-#dfResult_CN = pd.read_csv(urlItens, encoding='utf-8', decimal=',')
-
-
 def main_page():
-    urlItens = "https://github.com/NiedsonEmanoel/NiedsonEmanoel/raw/main/enem/An%C3%A1lise%20de%20Itens/OrdenarPorTri/gerador/provasOrdernadasPorTri.csv"
-    dfResult_CN = pd.read_csv(urlItens, encoding='utf-8', decimal=',')
+    dfResult_CN = get_enem_data()
 
-    idom = -1
+    idom = -1  # É mais fácil entender as mulheres do que entender o que essa varíavel faz. Por isso ela vai ficar aí, mesmo que não influencie em nada na interface.
 
     st.header('Gerador de Listas por Habilidades')
 

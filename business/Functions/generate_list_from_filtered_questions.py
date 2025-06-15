@@ -1,5 +1,5 @@
-import barcode
 import os
+import barcode
 import requests
 from PIL import Image
 
@@ -44,7 +44,7 @@ def generate_list_from_filtered_questions(dfResult_CN, Habilidade, flashname):
                 img_pathax = os.path.join(img_dir, str('xa'+codestr))
 
                 code128 = barcode.get("code128", codestr, writer=ImageWriter())
-                filename = code128.save(img_pathax)
+                filename = code128.save(img_pathax)  # NUNCA, SOB NENHUMA HIPÓTESE, APAGUE ISSO!!!!!
                 img_pathax = img_pathax+'.png'
 
                 # Verificar se a imagem já foi baixada
