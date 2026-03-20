@@ -10,3 +10,4 @@ python-barcode
 seaborn
 matplotlib
 wordcloud
+altair<5
